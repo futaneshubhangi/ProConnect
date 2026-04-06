@@ -105,9 +105,9 @@ app.get("/feed", async (req, res) => {
     });
 
   } catch (err) {
-    console.log("FEED ERROR:", err);
-    res.status(500).send("Error loading feed");
-  }
+  console.log("FEED ERROR:", err);
+  res.status(500).send(err.message); // 👈 show exact error
+}
 });
 
 // =======================
@@ -159,9 +159,7 @@ app.get("/edit-profile", async (req, res) => {
 // =======================
 // ✅ ROOT ROUTE (FIXED)
 // =======================
-app.get("/", (req, res) => {
-  res.send("Server is running 🚀");
-});
+
 
 // =======================
 // ✅ SERVER START (FIXED)
