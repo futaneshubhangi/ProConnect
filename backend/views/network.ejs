@@ -1,0 +1,140 @@
+<div class="container mt-3" style="max-width: 800px;">
+
+  <!-- 🔔 CONNECTION REQUESTS -->
+  <h5 class="mb-3">Connection Requests</h5>
+
+  <div class="card p-3 mb-4">
+
+    <% if (!requests || requests.length === 0) { %>
+      <p>No requests</p>
+    <% } %>
+
+    <% requests.forEach(user => { %>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <div class="d-flex align-items-center">
+          <img 
+            src="<%= user.userId.profilePicture %>" 
+            width="45" 
+            height="45"
+            class="rounded-circle me-2"
+          >
+          <div>
+            <strong><%= user.userId.name %></strong><br>
+            <small>@<%= user.userId.username %></small>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+
+          <!-- Accept -->
+          <form action="/user/accept_connection_request" method="POST">
+            <input type="hidden" name="senderId" value="<%= user.userId._id %>">
+            <button class="btn btn-success btn-sm">Accept</button>
+          </form>
+
+          <!-- Reject -->
+          <form action="/user/reject_connection_request" method="POST">
+            <input type="hidden" name="senderId" value="<%= user.userId._id %>">
+            <button class="btn btn-danger btn-sm">Reject</button>
+          </form>
+
+        </div>
+
+      </div>
+
+    <% }) %>
+
+  </div>
+
+
+  <!-- 🤝 CONNECTIONS -->
+  <h5 class="mb-3">Connections</h5>
+
+  <div class="card p-3 mb-4">
+
+    <% if (!connectedUsers || connectedUsers.length === 0) { %>
+      <p>No connections yet</p>
+    <% } %>
+
+    <% connectedUsers.forEach(user => { %>
+
+      <div class="d-flex align-items-center justify-content-between mb-3">
+
+        <div class="d-flex align-items-center">
+          <img 
+            src="<%= user.userId.profilePicture %>" 
+            width="45"
+            height="45"
+            class="rounded-circle me-2"
+          >
+          <div>
+            <strong><%= user.userId.name %></strong><br>
+            <small>@<%= user.userId.username %></small>
+          </div>
+        </div>
+
+        <span class="text-success small">Connected</span>
+
+      </div>
+
+    <% }) %>
+
+  </div>
+
+
+  <!-- 👥 PEOPLE YOU MAY KNOW -->
+  <h5 class="mb-3">People You May Know</h5>
+
+  <div class="card p-3">
+
+    <% if (!otherUsers || otherUsers.length === 0) { %>
+      <p>No suggestions available</p>
+    <% } %>
+
+    <% otherUsers.forEach(user => { %>
+
+      <div class="d-flex align-items-center justify-content-between mb-3">
+
+        <div class="d-flex align-items-center">
+          <img 
+            src="<%= user.userId.profilePicture %>" 
+            width="45"
+            height="45"
+            class="rounded-circle me-2"
+          >
+          <div>
+            <strong><%= user.userId.name %></strong><br>
+            <small>@<%= user.userId.username %></small>
+          </div>
+        </div>
+
+        <% if (user.isConnected) { %>
+
+          <span class="text-success small">Connected</span>
+
+        <% } else if (user.isPending) { %>
+
+          <button class="btn btn-secondary btn-sm rounded-pill" disabled>
+            Pending
+          </button>
+
+        <% } else { %>
+
+          <form action="/user/send_connection_request" method="POST">
+            <input type="hidden" name="connectionId" value="<%= user.userId._id %>">
+            <button class="btn btn-outline-primary btn-sm rounded-pill">
+              Connect
+            </button>
+          </form>
+
+        <% } %>
+
+      </div>
+
+    <% }) %>
+
+  </div>
+
+</div>

@@ -1,0 +1,94 @@
+<div class="container mt-4">
+
+  <div class="row justify-content-center">
+
+    <div class="col-md-6">
+
+      <div class="card p-4 shadow-sm rounded-4 border-0">
+
+        <h5 class="mb-3 text-center fw-semibold">Edit Post</h5>
+
+        <form 
+          action="/post/<%= post._id %>?_method=PUT" 
+          method="POST" 
+          enctype="multipart/form-data"
+        >
+
+          <!-- USER INFO -->
+          <div class="d-flex align-items-center mb-3">
+
+            <img 
+              src="<%= post.userId?.profilePicture || 'https://ui-avatars.com/api/?name=' + post.userId?.username %>" 
+              class="rounded-circle me-2"
+              width="40"
+              height="40"
+              style="object-fit: cover;"
+            >
+
+            <div>
+              <strong style="font-size:14px;"><%= post.userId?.username %></strong><br>
+              <small class="text-muted">Edit your post</small>
+            </div>
+
+          </div>
+
+          <!-- TEXT -->
+          <textarea 
+            name="body"
+            class="form-control border-0 mb-3"
+            rows="4"
+            placeholder="Update your post..."
+            style="resize:none; font-size:15px; box-shadow:none;"
+            required
+          ><%= post.body %></textarea>
+
+          <hr>
+
+          <!-- CURRENT MEDIA -->
+          <% if (post.media) { %>
+            <div class="mb-3 text-center">
+
+              <p class="text-muted small">Current Media</p>
+
+              <% if (post.media.includes("video")) { %>
+                <video controls class="w-100 rounded-3" style="max-height:250px;">
+                  <source src="<%= post.media %>">
+                </video>
+              <% } else { %>
+                <img src="<%= post.media %>" class="img-fluid rounded-3" style="max-height:250px;">
+              <% } %>
+
+            </div>
+          <% } %>
+
+          <!-- NEW MEDIA -->
+          <div class="d-flex justify-content-between align-items-center">
+
+            <label class="text-primary small" style="cursor:pointer;">
+              <i class="fa-solid fa-image"></i> Photo / Video
+              <input type="file" name="media" hidden>
+            </label>
+
+            <div class="d-flex gap-2">
+
+              <a href="/profile/<%= post.userId %>" class="btn btn-light btn-sm rounded-pill px-3">
+                Cancel
+              </a>
+
+              <button class="btn btn-primary btn-sm rounded-pill px-4">
+                Update
+              </button>
+
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

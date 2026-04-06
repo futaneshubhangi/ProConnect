@@ -1,0 +1,65 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4 sticky-top">
+
+  <!-- LOGO -->
+  <a class="navbar-brand text-primary fw-bold fs-4" href="/feed">
+    ProConnect
+  </a>
+
+  <!-- SEARCH BAR -->
+  <% if (userId) { %>
+    <form class="d-flex ms-3 w-25">
+      <input 
+        class="form-control rounded-pill px-3 shadow-sm" 
+        type="search" 
+        placeholder="Search..." 
+      >
+    </form>
+  <% } %>
+
+  <!-- RIGHT MENU -->
+  <div class="ms-auto d-flex align-items-center">
+
+    <% if (userId) { %>
+
+      <!-- AFTER LOGIN -->
+
+      <a href="/feed" class="nav-link mx-3 text-center">
+        <div><i class="fa-solid fa-house"></i></div>
+        <small>Home</small>
+      </a>
+
+      <a href="/user/network" class="nav-link mx-3 text-center">
+        <div><i class="fa-solid fa-user-group"></i></div>
+        <small>Network</small>
+      </a>
+
+      
+
+      <a href="/profile/<%= userId %>" class="nav-link mx-3 text-center">
+        <div><i class="fa-solid fa-user"></i></div>
+        <small>Me</small>
+      </a>
+
+      <!-- LOGOUT -->
+      <a href="/logout" class="nav-link mx-3 text-center text-danger">
+        <div><i class="fa-solid fa-right-from-bracket"></i></div>
+        <small>Logout</small>
+      </a>
+
+    <% } else { %>
+
+      <!-- BEFORE LOGIN -->
+
+      <a href="/login" class="btn btn-primary rounded-pill px-4 me-2 shadow-sm">
+        Login
+      </a>
+
+      <a href="/register" class="btn btn-outline-secondary rounded-pill px-4">
+        Register
+      </a>
+
+    <% } %>
+
+  </div>
+
+</nav>

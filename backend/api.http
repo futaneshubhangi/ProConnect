@@ -1,0 +1,39 @@
+POST http://localhost:8080/register
+json body
+{
+  "name": "....",
+  "email": "......",
+  "username": "......",
+  "password": "....."
+}
+
+POST http://localhost:8080/login
+json body
+{
+  "email": ".....",
+  "password": "......."
+}
+
+POST http://localhost:8080/update_profile_picture
+json body
+{
+  "profile_picture" : "choose the file"
+}
+
+
+POST http://localhost:8080/user_uodate
+json body
+{
+  {
+  "name": "Shubhangi Futane",
+  "username": "shubhangi_dev",
+  "email": "shubhangi@gmail.com",
+  "bio": "Full Stack Developer"
+}
+}
+
+
+POST http://localhost:8080/get_user_and_profile
+json body
+{}
+

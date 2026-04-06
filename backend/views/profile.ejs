@@ -1,0 +1,242 @@
+<div class="container mt-3" style="max-width: 900px;">
+
+  <!-- PROFILE CARD -->
+  <div class="card shadow-sm border-0 rounded-3 mb-3">
+
+    <div style="height:100px; background:linear-gradient(135deg,#0a66c2,#0a8bdc);" class="rounded-top-3"></div>
+
+    <div class="p-3 text-center">
+
+      <img 
+        src="<%= user?.profilePicture || 'https://ui-avatars.com/api/?name=' + user?.username %>" 
+        class="rounded-circle border border-2"
+        width="90"
+        height="90"
+        style="object-fit: cover; margin-top:-45px;"
+      >
+
+      <h5 class="mt-2 mb-0"><%= user?.name || "User" %></h5>
+
+      <small class="text-muted">@<%= user?.username || "username" %></small>
+
+      <p class="mb-1 mt-2 text-muted" style="font-size:14px;">
+        <%= profile?.currentPost || "Add your role" %>
+      </p>
+
+      <p style="font-size:13px;">
+        <%= profile?.bio || "Add your bio..." %>
+      </p>
+
+      <% if (userId && user && user._id && user._id.toString() === userId.toString()) { %>
+
+  <div class="d-flex justify-content-center gap-2 mt-2">
+
+    <!-- EDIT BUTTON -->
+    <a href="/edit-profile" class="btn btn-sm btn-primary px-3 rounded-pill">
+      <i class="fa-solid fa-pen"></i> Edit Profile
+    </a>
+
+    <!-- DOWNLOAD RESUME BUTTON -->
+    <a href="/user/download_resume" class="btn btn-sm btn-success px-3 rounded-pill">
+      <i class="fa-solid fa-download"></i> Download Resume
+    </a>
+
+  </div>
+
+<% } %>
+
+    </div>
+  </div>
+
+  <!-- CREATE POST -->
+  <% if (userId && user && user._id && user._id.toString() === userId.toString()) { %>
+
+  <div class="card shadow-sm border-0 rounded-3 mb-3 p-3">
+
+    <form action="/post/create" method="POST" enctype="multipart/form-data">
+
+      <div class="d-flex align-items-center mb-3">
+
+        <img 
+          src="<%= user?.profilePicture || 'https://ui-avatars.com/api/?name=' + user?.username %>" 
+          class="rounded-circle me-2"
+          width="45"
+          height="45"
+        >
+
+        <div>
+          <strong style="font-size:14px;"><%= user?.name %></strong><br>
+          <small class="text-muted">@<%= user?.username %></small>
+        </div>
+
+      </div>
+
+      <textarea 
+        name="body"
+        class="form-control border-0"
+        placeholder="Start a post..."
+        rows="3"
+        style="resize:none; font-size:15px; box-shadow:none;"
+        required
+      ></textarea>
+
+      <hr>
+
+      <div class="d-flex justify-content-between align-items-center">
+
+        <div class="d-flex gap-3">
+
+          <input 
+            type="file" 
+            name="media" 
+            id="mediaInput"
+            accept="image/*,video/*"
+            hidden
+          >
+
+          <label for="mediaInput" style="cursor:pointer;" class="text-primary small">
+            <i class="fa-solid fa-image"></i> Photo
+          </label>
+
+          <label for="mediaInput" style="cursor:pointer;" class="text-success small">
+            <i class="fa-solid fa-video"></i> Video
+          </label>
+
+        </div>
+
+        <button class="btn btn-primary btn-sm px-4 rounded-pill">
+          Post
+        </button>
+
+      </div>
+
+      <!-- FILE NAME -->
+      <small id="fileName" class="text-muted"></small>
+
+    </form>
+
+  </div>
+  <% } %>
+
+  <!-- GRID -->
+  <div class="row g-3">
+
+    <!-- LEFT -->
+    <div class="col-md-4">
+
+      <div class="card p-3 shadow-sm border-0 rounded-3 mb-3">
+        <h6 class="mb-2">About</h6>
+        <p style="font-size:13px;">
+          <%= profile?.bio || "No bio added" %>
+        </p>
+      </div>
+
+      <div class="card p-3 shadow-sm border-0 rounded-3">
+        <h6 class="mb-2">Connections</h6>
+        <p style="font-size:13px;">
+          <%= profile?.connections?.length || 0 %> connections
+        </p>
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <!-- RIGHT -->
+<div class="col-md-8">
+
+  <div class="card p-3 shadow-sm border-0 rounded-3">
+
+    <h6>User Posts</h6>
+
+    <% if (!posts || posts.length === 0) { %>
+      <p style="font-size:13px;">No posts yet</p>
+    <% } %>
+
+    <!-- GRID STYLE -->
+    <div class="row g-2">
+
+      <% posts.forEach(post => { %>
+
+        <div class="col-md-6">
+
+          <div class="border rounded p-2 h-100 position-relative">
+
+  <!-- EDIT + DELETE BUTTONS -->
+  <% if (userId && post.userId && post.userId.toString() === userId.toString()) { %>
+
+    <div style="position:absolute; top:8px; right:8px;" class="d-flex gap-2">
+
+      <!-- EDIT -->
+      <a href="/post/edit/<%= post._id %>" 
+         class="btn btn-light btn-sm rounded-circle">
+        <i class="fa-solid fa-pen"></i>
+      </a>
+
+      <!-- DELETE -->
+      <form action="/post/<%= post._id %>?_method=DELETE" method="POST">
+        <button 
+          class="btn btn-light btn-sm rounded-circle text-danger"
+          onclick="return confirm('Delete this post?')"
+        >
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </form>
+
+    </div>
+
+  <% } %>
+
+  <!-- TEXT -->
+  <p style="font-size:13px;" class="mb-1 mt-3">
+    <%= post.body %>
+  </p>
+
+  <!-- MEDIA -->
+  <% if(post.media){ %>
+
+    <% if(post.media.match(/\.(mp4|webm|ogg)$/i)) { %>
+
+      <!-- VIDEO -->
+      <video controls class="w-100 rounded" style="height:150px; object-fit:cover;">
+        <source src="<%= post.media %>">
+      </video>
+
+    <% } else { %>
+
+      <!-- IMAGE -->
+      <img 
+        src="<%= post.media %>" 
+        class="w-100 rounded"
+        style="height:150px; object-fit:cover;"
+      >
+
+    <% } %>
+
+  <% } %>
+
+</div>
+
+        </div>
+
+      <% }) %>
+
+    </div>
+
+  </div>
+
+</div>
+
+  </div>
+
+</div>
+
+<script>
+  const input = document.getElementById("mediaInput");
+  const fileName = document.getElementById("fileName");
+
+  input.addEventListener("change", function () {
+    if (this.files.length > 0) {
+      fileName.innerText = this.files[0].name;
+    }
+  });
+</script>
