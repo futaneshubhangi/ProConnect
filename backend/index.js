@@ -165,6 +165,9 @@ app.get("/edit-profile", async (req, res) => {
 app.get("/", (req, res) => {
   res.redirect("/feed");
 });
+app.get("/", (req, res) => {
+  res.send("Server is running");
+});
 
 // SERVER START
 const start = async () => {
