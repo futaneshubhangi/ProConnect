@@ -15,7 +15,6 @@ import {
   getConnections
 } from "../controllers/user.controller.js";
 
-import { authMiddleware } from "../middleware/authMiddleware.js";
 import upload from "../middleware/upload.middleware.js";
 
 const router = express.Router();
