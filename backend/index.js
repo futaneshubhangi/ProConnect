@@ -39,7 +39,7 @@ app.use(expressLayouts);
 app.set("layout", "layouts/boilerplate");
 
 app.use(session({
-  secret: "mysecretkey",
+  secret: process.env.JWT_SECRET || "fallbacksecret",
   resave: false,
   saveUninitialized: true
 }));
@@ -81,13 +81,12 @@ app.get("/logout", (req, res) => {
 // =======================
 app.get("/feed", async (req, res) => {
   try {
-
     const posts = await Post.find()
-      .populate("userId", "username profilePicture") // ✅ VERY IMPORTANT
+      .populate("userId", "username profilePicture")
       .sort({ createdAt: -1 });
 
     const comments = await Comment.find()
-  .populate("userId", "username profilePicture");
+      .populate("userId", "username profilePicture");
 
     let user = null;
     let profile = null;
@@ -96,8 +95,6 @@ app.get("/feed", async (req, res) => {
       user = await User.findById(req.session.userId);
       profile = await Profile.findOne({ userId: req.session.userId });
     }
-
-   
 
     res.render("posts/index", {
       posts,
@@ -108,8 +105,8 @@ app.get("/feed", async (req, res) => {
     });
 
   } catch (err) {
-    console.log(err);
-    res.send("Error loading feed");
+    console.log("FEED ERROR:", err);
+    res.status(500).send("Error loading feed");
   }
 });
 
@@ -118,9 +115,7 @@ app.get("/feed", async (req, res) => {
 // =======================
 app.get("/profile/:id", async (req, res) => {
   try {
-
     const user = await User.findById(req.params.id);
-
     const profile = await Profile.findOne({ userId: req.params.id });
 
     const posts = await Post.find({ userId: req.params.id })
@@ -134,49 +129,52 @@ app.get("/profile/:id", async (req, res) => {
     });
 
   } catch (err) {
-    console.log(err);
-    res.send("Error loading profile");
+    console.log("PROFILE ERROR:", err);
+    res.status(500).send("Error loading profile");
   }
 });
 
+// =======================
+// ✅ EDIT PROFILE
+// =======================
 app.get("/edit-profile", async (req, res) => {
   try {
-
-    const user = await User.findById(req.session.userId);   // ✅ ADD THIS
+    const user = await User.findById(req.session.userId);
 
     const profile = await Profile.findOne({
       userId: req.session.userId
     });
 
     res.render("editProfile", {
-      user,        // ✅ ADD THIS
+      user,
       profile
     });
 
   } catch (err) {
-    console.log(err);
-    res.send("Error loading edit profile");
+    console.log("EDIT PROFILE ERROR:", err);
+    res.status(500).send("Error loading edit profile");
   }
 });
 
-
-
-// HOME REDIRECT
+// =======================
+// ✅ ROOT ROUTE (FIXED)
+// =======================
 app.get("/", (req, res) => {
-  res.redirect("/feed");
-});
-app.get("/", (req, res) => {
-  res.send("Server is running");
+  res.send("Server is running 🚀");
 });
 
-// SERVER START
+// =======================
+// ✅ SERVER START (FIXED)
+// =======================
 const start = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URL);
+    await mongoose.connect(process.env.MONGO_URI);
     console.log("MongoDB Connected ✅");
 
-    app.listen(8080, () => {
-      console.log("Server running on port 8080 🚀");
+    const PORT = process.env.PORT || 8080;
+
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT} 🚀`);
     });
 
   } catch (error) {
